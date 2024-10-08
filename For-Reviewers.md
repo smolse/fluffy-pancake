@@ -34,7 +34,7 @@ additional ideas for future improvements:
 
 - Exponential backoff with jitter
 
-    - Currently, the service layer ([service/service.go](service/service.go)) does not implement any retry mechanism in
+    - Currently, the service layer ([service/service.go](./internal/service/service.go)) does not implement any retry mechanism in
     case of failures when interacting with the data store (not really needed for the local in-memory implementation,
     but would be essential for a real decoupled database). Implementing an exponential backoff with jitter retry
     mechanism would make the service more resilient to transient failures and improve the overall reliability of the

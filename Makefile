@@ -3,7 +3,7 @@
 # Default target, which test and builds the web service binaries
 all: test build
 
-# This target builds the web service binaries on the host machine
+# This target builds the web service binaries directly on the host machine
 build:
 ifeq ($(GOOS),)
 	$(error GOOS is not set)
@@ -14,7 +14,7 @@ endif
 	@GOOS=$(GOOS) GOARCH=$(GOARCH) CGO_ENABLED=0 go build -o bin/risk-api-$(GOOS)-$(GOARCH) -ldflags="-w -s" ./cmd/risk-api
 	@if [ "$(GOOS)" = "windows" ]; then mv bin/risk-api-$(GOOS)-$(GOARCH) bin/risk-api-$(GOOS)-$(GOARCH).exe; fi 
 
-# This target builds the web service binaries in a Docker container
+# This target builds the web service binaries in a Docker container and copies them to the host machine
 build-in-docker:
 ifeq ($(GOOS),)
 	$(error GOOS is not set)
@@ -38,16 +38,15 @@ endif
 	fi
 	@docker rm risk-api-builder-tmp
 
-# This target builds the Docker image for the web service
+# This target builds the Docker image for running the web service as a container
 build-docker:
 	@docker build \
-		--progress=plain \
 		-f build/package/Dockerfile \
 		--target run \
 		-t risk-api \
 		.
 
-# This target removes the web service binaries from the host machine
+# This target removes the web service binaries from the bin directory
 clean:
 	@rm bin/risk-api-*
 
